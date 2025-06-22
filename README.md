@@ -1,2 +1,2 @@
 # Abd-ru-shin-Books
-Book sales from the Author
+Book sales website for the Author
