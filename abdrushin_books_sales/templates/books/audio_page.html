@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Audio Excerpts - Abd-ru-shin Books{% endblock %}
+
+{% block content %}
+    <h1>Audio Excerpts from "In The Light of Truth"</h1>
+
+    <p>Listen to insightful excerpts from the book. The first three audios of Book 1 are free!</p>
+
+    {% for book in books %} {# You'll pass 'books' context from view later #}
+        <h2>{{ book.title }}</h2>
+        <ul>
+            {% for audio in book.audio_set.all|dictsort:"chapter_number" %}
+                <li>
+                    Chapter {{ audio.chapter_number }}: {{ audio.title }}
+                    {% if audio.is_free or user.userprofile.audio_access_book_one %} {# Or other book access #}
+                        <audio controls>
+                            <source src="{{ audio.audio_file.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    {% else %}
+                        <span class="text-muted">(Locked)</span>
+                        {% if user.is_authenticated %}
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#unlockAudioModal" data-book-id="{{ book.id }}" data-book-title="{{ book.title }}">Unlock (KShs. 500)</button>
+                        {% else %}
+                            <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-sm btn-secondary">Login to Unlock</a>
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>No audios available for this book yet.</li>
+            {% endfor %}
+        </ul>
+    {% empty %}
+        <p>No books with audios available yet.</p>
+    {% endfor %}
+
+    <div class="modal fade" id="unlockAudioModal" tabindex="-1" aria-labelledby="unlockAudioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unlockAudioModalLabel">Unlock Audio Access</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>To unlock all audios for <strong id="modalBookTitle"></strong>, please pay KShs. 500 via M-Pesa to your phone number.</p>
+                    <p>Your M-Pesa phone number: <strong id="mpesaPhoneNumber"></strong> (from your profile, or enter below)</p>
+                    <form id="mpesaPaymentForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="mpesaAmount" class="form-label">Amount</label>
+                            <input type="text" class="form-control" id="mpesaAmount" value="500" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mpesaPhone" class="form-label">M-Pesa Phone Number</label>
+                            <input type="text" class="form-control" id="mpesaPhone" placeholder="e.g., 254712345678">
+                            <small class="form-text text-muted">Enter your M-Pesa registered phone number.</small>
+                        </div>
+                        <input type="hidden" id="modalBookId" name="book_id">
+                        <button type="submit" class="btn btn-primary">Initiate M-Pesa Payment</button>
+                    </form>
+                    <div id="paymentStatus" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var unlockAudioModal = document.getElementById('unlockAudioModal');
+        unlockAudioModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var bookId = button.getAttribute('data-book-id');
+            var bookTitle = button.getAttribute('data-book-title');
+
+            var modalBookTitle = unlockAudioModal.querySelector('#modalBookTitle');
+            var modalBookId = unlockAudioModal.querySelector('#modalBookId');
+            var mpesaPhoneNumberField = unlockAudioModal.querySelector('#mpesaPhone');
+            var mpesaPhoneNumberDisplay = unlockAudioModal.querySelector('#mpesaPhoneNumber');
+
+            modalBookTitle.textContent = bookTitle;
+            modalBookId.value = bookId;
+
+            // Pre-fill M-Pesa phone if available in user profile
+            // This part requires JS to fetch user's phone from profile.
+            // For now, let's assume you'll manually enter or fetch via AJAX.
+            // Example (replace with actual fetch):
+            {% if user.is_authenticated and user.userprofile.phone_number %}
+                mpesaPhoneNumberField.value = "{{ user.userprofile.phone_number }}";
+                mpesaPhoneNumberDisplay.textContent = "{{ user.userprofile.phone_number }}";
+            {% else %}
+                mpesaPhoneNumberDisplay.textContent = "Not set in profile.";
+            {% endif %}
+        });
+
+        var mpesaPaymentForm = document.getElementById('mpesaPaymentForm');
+        mpesaPaymentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var bookId = document.getElementById('modalBookId').value;
+            var amount = document.getElementById('mpesaAmount').value;
+            var phoneNumber = document.getElementById('mpesaPhone').value;
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            var paymentStatusDiv = document.getElementById('paymentStatus');
+
+            paymentStatusDiv.innerHTML = '<div class="alert alert-info">Initiating M-Pesa STK Push... Please check your phone.</div>';
+
+            fetch('/mpesa/stk_push/', { // This URL will be handled by your M-Pesa integration
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    book_id: bookId,
+                    amount: amount,
+                    phone_number: phoneNumber
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    paymentStatusDiv.innerHTML = '<div class="alert alert-success">STK Push initiated successfully! Please complete the payment on your phone.</div>';
+                    // You might want to poll for payment status or wait for callback here
+                } else {
+                    paymentStatusDiv.innerHTML = '<div class="alert alert-danger">Payment initiation failed: ' + data.message + '</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                paymentStatusDiv.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again.</div>';
+            });
+        });
+    });
+</script>
+{% endblock %}

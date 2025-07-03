@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Your Profile - Abd-ru-shin Books{% endblock %}
+
+{% block content %}
+    <h1>Complete Your Profile</h1>
+    <p>Please provide your details to unlock access to free chapters.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success mt-3">Save Profile</button>
+    </form>
+
+    {% if user.is_authenticated and user.userprofile.has_access_to_book_one_chapters %}
+        <h2 class="mt-5">Free Chapters: In The Light of Truth - Book 1</h2>
+        <p>You now have access to the first three chapters of Book 1. Click to read:</p>
+        <ul>
+            <li><a href="#" onclick="openPdfViewer('/media/free_pdfs/book1_chapter1.pdf'); return false;">Book 1 - Chapter 1 (Read Only)</a></li>
+            <li><a href="#" onclick="openPdfViewer('/media/free_pdfs/book1_chapter2.pdf'); return false;">Book 1 - Chapter 2 (Read Only)</a></li>
+            <li><a href="#" onclick="openPdfViewer('/media/free_pdfs/book1_chapter3.pdf'); return false;">Book 1 - Chapter 3 (Read Only)</a></li>
+        </ul>
+        <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pdfViewerModalLabel">Reading Chapter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="pdfViewerFrame" style="width:100%; height:80vh;" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elif user.is_authenticated %}
+        <p class="mt-4">Complete your profile to gain access to free chapters of "In The Light of Truth - Book 1".</p>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function openPdfViewer(pdfUrl) {
+        document.getElementById('pdfViewerFrame').src = pdfUrl;
+        var pdfModal = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
+        pdfModal.show();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="book-detail">
+    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" />
+    <h2>{{ book.title }}</h2>
+    <p>{{ book.description }}</p>
+    <a href="{{ book.pdf_file.url }}" target="_blank" class="btn">Read First 3 Chapters</a>
+    <h3>Audio Samples</h3>
+    <ul>
+    {% for audio in audios %}
+        <li>
+            Chapter {{ audio.chapter }}: {{ audio.title }}
+            {% if audio.is_free %}
+                <audio controls src="{{ audio.audio_file.url }}"></audio>
+            {% else %}
+                <em>Unlock for KSHS {{ audio.price }}</em>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

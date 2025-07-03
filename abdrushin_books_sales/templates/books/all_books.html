@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}All Books - Abd-ru-shin Books{% endblock %}
+
+{% block content %}
+    <h1>All Books</h1>
+    <div class="row">
+        {% for book in other_books %}
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">{{ book.description|truncatechars:70 }}</p>
+                        <a href="#" class="btn btn-sm btn-info">Add to Cart (Coming Soon)</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No other books available yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

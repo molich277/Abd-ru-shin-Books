@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Audio Library</h2>
+{% for book in books %}
+    <h3>{{ book.title }}</h3>
+    <ul>
+    {% for audio in book.audios.all %}
+        <li>
+            Chapter {{ audio.chapter }}: {{ audio.title }}
+            {% if audio.is_free %}
+                <audio controls src="{{ audio.audio_file.url }}"></audio>
+            {% else %}
+                <em>Unlock for KSHS {{ audio.price }}</em>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endfor %}
+{% endblock %}

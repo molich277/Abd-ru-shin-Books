@@ -1,0 +1,37 @@
+body {
+    background: #faf6ef;
+    color: #2b2b2b;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+nav {
+    background: #2e205f;
+    color: #f4e3b2;
+    padding: 1rem;
+    text-align: center;
+}
+nav a {
+    color: #f4e3b2;
+    margin: 0 1rem;
+    text-decoration: none;
+}
+.hero {
+    background: linear-gradient(90deg, #2e205f 60%, #faf6ef 100%);
+    color: #faf6ef;
+    padding: 2rem;
+    border-radius: 0 0 20px 20px;
+    text-align: center;
+}
+.cta-btn, .btn {
+    background-color: #5a9e6f;
+    color: #fff;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    text-decoration: none;
+}
+.book-cards { display: flex; gap: 2rem; justify-content: center; }
+.book-card { background: #fff; border: 1px solid #f4e3b2; box-shadow: 0 2px 10px #eee; border-radius: 8px; padding: 1rem; text-align: center; }
+.book-card img { width: 120px; height: 180px; object-fit: cover; margin-bottom: 1rem; }
+footer { background: #2e205f; color: #f4e3b2; text-align: center; padding: 1rem; }
