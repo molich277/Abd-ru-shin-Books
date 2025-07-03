@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 # Abd-ru-shin Books Website
 
-A secure, dynamic book sales and audio streaming platform for "In The Light of Truth" and other works. Built with Django and Rust.
+# Abd-ru-shin Books Project
+
+This repository contains the Django web application for Abd-ru-shin Books sales.
 
 ## Features
 - Social login with Gmail
@@ -15,3 +18,6 @@ A secure, dynamic book sales and audio streaming platform for "In The Light of T
 
 1. Clone repo
 2. Install Python (3.10+), Rust, and dependencies:
+=======
+# Abd-ru-shin-Books
+>>>>>>> 243e4c59395320c329a2c8acc1b641fede86e39b
