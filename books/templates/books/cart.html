@@ -1,0 +1,18 @@
+{# books/templates/books/cart.html #}
+{% extends 'base.html' %}
+
+{% block title %}Your Shopping Cart - Alexander Bernhardt Publishing Co Kenya{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 text-primary">Your Shopping Cart</h1>
+    <p class="lead text-center">Review the items you've added to your cart.</p>
+
+    <div class="card p-4 shadow-sm mt-4">
+        <h5 class="card-title text-center">Your Cart is Empty!</h5>
+        <p class="card-text text-center">It looks like you haven't added anything to your cart yet. Browse our <a href="{% url 'books:all_books' %}">books</a> to get started!</p>
+    </div>
+
+    {# In the future, you'll add logic here to display cart items, quantities, totals, etc. #}
+</div>
+{% endblock %}

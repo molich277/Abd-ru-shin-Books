@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include('books.urls')), # Your app's URLs
     path('accounts/', include('allauth.urls')), # allauth URLs for login/logout
 ]
-
+ 
 # Serve static and media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -9,12 +9,21 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-import os 
-from pathlib import Path
+import os # You likely have this already
+from pathlib import Path # <-- ADD THIS LINE
+
+# import os
+# from pathlib import Path
+# BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'), # This is the directory we'll create
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # For collectstatic in production
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -29,79 +38,119 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    'djangocms_admin_style', # Must be before 'django.contrib.admin'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'books', # Your new app
-    'allauth', # For Google OAuth
+    'django.contrib.sites', # <-- CRITICAL: ENSURE THIS IS PRESENT
+    'allauth',
     'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google', # For Google OAuth
-    'crispy_forms', # For better form rendering
-    'crispy_bootstrap5', # For Bootstrap 5 styling with crispy forms
+    'allauth.socialaccount', # Only if you plan to use social logins (Google, Facebook etc.)
+    'filer',
+    'easy_thumbnails',
+    'djangocms_versioning',
+    'djangocms_alias',
+    'cms', # Django CMS itself <-- CRITICAL: ENSURE THIS IS PRESENT
+    'menus', # Required for menu management <-- CRITICAL: ENSURE THIS IS PRESENT
+    'treebeard', # Required for tree structures <-- CRITICAL: ENSURE THIS IS PRESENT
+    'sekizai', # Required for JavaScript/CSS management <-- CRITICAL: ENSURE THIS IS PRESENT
+    'djangocms_text_ckeditor', # Rich text editor for CMS
+    'djangocms_link', # Link plugin
+    'djangocms_file', # File plugin
+    'djangocms_picture', # Picture plugin
+    'djangocms_video', # Video plugin
+    'djangocms_snippet', # Snippet plugin
+    'djangocms_style', # Style plugin
+    'djangocms_googlemap', # Google Map plugin
+
+    # Your existing apps
+    'books',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+# ... (rest of your settings.py content) ...
 
+# Also, ensure SITE_ID is defined (it's required by django.contrib.sites)
+SITE_ID = 1 # Usually 1 unless you have specific multi-site setup
+
+# ... and also ensure CMS_TEMPLATES is defined somewhere below INSTALLED_APPS.
+# It must be present, even if empty, but I provided a basic one:
+CMS_TEMPLATES = [
+    ('fullwidth.html', 'Fullwidth Page'),
+    ('home.html', 'Home Page (CMS)'),
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware', # <-- Add this line
+    'allauth.account.middleware.AccountMiddleware', # <-- ADD THIS LINE
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware', # This is important for CMS's internationalization
+    'cms.middleware.utils.ApphookReloadMiddleware', # Needed for apphook changes to take effect without full server restart
+     
+    'cms.middleware.toolbar.ToolbarMiddleware', # Enables the frontend editing toolbar
+    'cms.middleware.language.LanguageCookieMiddleware', # <-- Corrected name
 ]
 
+# ... (other settings below, like TEMPLATES, INSTALLED_APPS, etc.) ...
 
 ROOT_URLCONF = 'abdrushin_books_sales.urls'
-
 TEMPLATES = [
     {
-        
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'abdrushin_books_sales', 'templates')], # Add this line
+        'DIRS': [
+             BASE_DIR / 'templates', # Your project-level templates if any
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request', # <-- THIS ONE
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request', # Required by allauth
+                'sekizai.context_processors.sekizai', # <-- THIS ONE
+                'cms.context_processors.cms_settings', # <-- THIS ONE
             ],
         },
     },
 ]
 
+# ... (also check your MIDDLEWARE for CMS entries, order is important there too)
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-WSGI_APPLICATION = 'abdrushin_books_sales.wsgi.application'
+# ... (above this section) ...
 
+WSGI_APPLICATION = 'abdrushin_books_sales.wsgi.application' # <-- Corrected name
+
+# ... (below this section) ...
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# ... (above this section) ...
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3', # This will create the database file in your project root
     }
 }
 
+# ... (below this section) ...
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# ... (above this section) ...
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -118,42 +167,111 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+# ... (below this section) ...
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+# Abd_ru_shin-Books/settings.py
 
-LANGUAGE_CODE = 'en-us'
+# ... (directly below AUTH_PASSWORD_VALIDATORS) ...
 
-TIME_ZONE = 'UTC'
-
+# Internationalization (i18n) settings
+# CRITICAL for CMS, already provided but ensuring correct placement
+LANGUAGE_CODE = 'en'
 USE_I18N = True
+USE_L10N = True # For Django < 4.0, or use USE_TZ
+USE_TZ = True # Recommended for Django >= 4.0
 
-USE_TZ = True
+# Define the languages your CMS will support (CRITICAL for CMS)
+# Already provided, ensure this exact structure
+LANGUAGES = [
+    ('en', 'English'),
+    # ('de', 'German'), # Example for another language
+]
 
+CMS_LANGUAGES = {
+    1: [ # SITE_ID 1
+        {
+            'code': 'en',
+            'name': 'English',
+            'fallbacks': ['en'],
+            'public': True,
+            'redirect_on_fallback': True,
+            'hide_untranslated': False,
+        },
+    ],
+    'default': {
+        'fallbacks': ['en'],
+        'redirect_on_fallback': True,
+        'hide_untranslated': False,
+        'public': True,
+    }
+}
+
+
+# REQUIRED: Add SITE_ID (CRITICAL for CMS)
+# Already provided, ensure this is present
 SITE_ID = 1
 
-# Static files (CSS, JavaScript, Images)
-import os
-
-# ... (other settings)
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# Media settings (CRITICAL for CMS - where uploaded files go)
+# Already provided, ensure this is present
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media' # This will create a 'media' folder in your project root
 
-# ... (at the very bottom for production settings, but good to have in mind)
-# import dj_database_url
-# DATABASES = {
-#     'default': dj_database_url.config(conn_max_age=600)
-# }
+# Static files (CSS, JavaScript, Images)
+# Already provided, ensure this is present
+STATIC_URL = '/static/'
+# Optional: If you have static files outside of app 'static' folders
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
+# Optional: Configure STATIC_ROOT if you're going to collect static files for production
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Custom settings for your app (if any)
+# From previous discussions:
+LOGIN_REDIRECT_URL = '/' # Or 'books:profile' etc.
+LOGOUT_REDIRECT_URL = '/'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# CKEditor settings (for rich text editing in CMS)
+# Already provided, ensure this is present
+CKEDITOR_SETTINGS = {
+    'language': '{{ language }}',
+    'toolbar': 'CMS',
+    'skin': 'moono-lisa',
+    'width': '100%', # Corrected the typo 'width' from ''width'
+    'toolbar_CMS': [
+        ['Undo', 'Redo'],
+        ['ShowBlocks'],
+        ['Format', 'Styles'],
+        ['TextColor', 'BGColor', '-', 'PasteText', 'PasteFromWord'],
+        ['Maximize', ''],
+        '/',
+        ['Bold', 'Italic', 'Underline', '-', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+        ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+        ['Link', 'Unlink'],
+        ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
+        ['Source'],
+    ],
+}
+
+# Define your CMS templates (can be changed later)
+
+# Already provided, ensure this is present
+CMS_TEMPLATES = [
+    ('fullwidth.html', 'Fullwidth Page'),
+    ('home.html', 'Home Page (CMS)'),
+]
+
+# Confirm intention to use Django CMS 4.x
+CMS_CONFIRM_VERSION4 = True
+
+# ... any other custom settings for your project ...

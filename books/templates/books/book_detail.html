@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <h1>{{ book.title }}</h1>
+    <p>{{ book.description }}</p>
+    {% if book.cover_image %}
+        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="img-fluid" style="max-width: 300px;">
+    {% endif %}
+    <p>Price: ${{ book.price }}</p>
+    <a href="{% url 'books:home' %}" class="btn btn-secondary mt-3">Back to Home</a>
+</div>
+{% endblock %}

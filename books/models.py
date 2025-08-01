@@ -16,6 +16,8 @@ class Book(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True) # A text field for a short biography
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True) # For user profile images
     full_name = models.CharField(max_length=255, blank=True)
     age = models.IntegerField(null=True, blank=True)
     sex = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], blank=True)

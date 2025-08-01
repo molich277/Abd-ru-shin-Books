@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load cms_tags menu_tags sekizai_tags %}
+
+{% block content %}
+    <div class="container">
+        {# This is the main content area for Django CMS plugins #}
+        {% placeholder "content" %}
+    </div>
+{% endblock %}

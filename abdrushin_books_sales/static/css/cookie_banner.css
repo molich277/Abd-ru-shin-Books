@@ -1,0 +1,35 @@
+/* /home/yuri/Websites/Abd-ru-shin-Books/static/css/cookie_banner.css */
+#cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333; /* Dark background */
+    color: #fff; /* White text */
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    z-index: 1000; /* Ensure it's on top of other content */
+    display: none; /* Hidden by default, JS will show if needed */
+    font-size: 0.9rem;
+}
+
+#cookie-banner p {
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+}
+
+#cookie-banner button {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+#cookie-banner button:hover {
+    background-color: #0056b3;
+}

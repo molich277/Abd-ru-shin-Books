@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {# Assuming you have a base template #}
+{% load crispy_forms_tags %} {# If you are using django-crispy-forms, otherwise omit #}
+
+{% block content %}
+    <h2>Your Profile</h2>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %} {# <-- CRUCIAL: Must be inside the <form> tags #}
+
+    {# Choose ONE of these options. Make sure only one is uncommented. #}
+
+    {# Option 1: Simplest, good for debugging #}
+    {{ user_form.as_p }}
+
+    {# Option 2: For django-crispy-forms users. Requires installation and {% load crispy_forms_tags %} #}
+    {# {{ user_form|crispy }} #}
+
+    {# Option 3: Manual rendering (more advanced, but useful for full control) #}
+    {#
+    <p>Username: {{ user_form.username }}</p>
+    <p>Email: {{ user_form.email }}</p>
+    #}
+
+    <button type="submit">Save Profile</button>
+</form>

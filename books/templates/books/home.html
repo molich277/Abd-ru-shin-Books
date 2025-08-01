@@ -1,0 +1,31 @@
+{# /home/yuri/Websites/Abd-ru-shin-Books/books/templates/books/home.html #}
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container my-4">
+        <h1 class="text-center">WELCOME TO</h1>
+        <h2 class="text-center">ALEXANDER BERNHARDT PUBLISHING COMPANY KENYA</h2>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <img src="{% static 'books/images/in_light_of_truth_lage.jpg' %}" alt="In The Light of Truth - The Grail Message Book Cover" class="img-fluid rounded shadow-sm quarter-size-image">
+            </div>
+            <div class="col-md-6">
+                <p>The goal of Alexander Bernhardt Publishing Kenya is to raise awareness in Kenya of the works of Oskar Ernst Bernhardt (1875 - 1941), a German author who wrote under the name of Abd-ru-shin.</p>
+                <p>Alexander Bernhardt Publishing Kenya is the exclusive representative in Kenya of the Alexander Bernhardt Publishing Company, which was established in 1949 in Austria. This publishing house has its beginnings in the organization founded by the author during his lifetime for the publication of his writings which principal work is the Grail Message, entitled "In the Light of Truth". Its headquarters is still located in Vomperberg in Tyrol (Austria), Abd-ru-shin's place of residence and center of activity.</p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <p>The Grail Message - In The Light of Truth is addressed to the individual human being, irrespective of race, nationality or creed. He alone bears responsibility for everything he thinks or does.</p>
+            <p>The Grail Message does not bring a new religion but, cutting across all religious frontiers, it unswervingly leads the earnestly seeking reader out of all the chaos of the present day confusion.</p>
+            <p>Abd-ru-shin's writings are published in many languages. The Alexander Bernhardt Publishing Company is operating in many countries around the world.</p>
+            <p>This website provides an opportunity for earnest seekers to acquire objective information and to expand their knowledge about the work of Abd-ru-shin, as well as the works dedicated to him.</p>
+            <p>Featured Books: In The Light of Truth (Books 1 to 3)</p>
+            <p>No main books available yet.</p>
+            <p>Explore <a href="{% url 'books:all_books' %}">all available books</a> on our Books page.</p>
+        </div>
+    </div>
+{% endblock content %}

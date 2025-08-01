@@ -1,0 +1,8 @@
+/* Your custom CSS rules can also go here */
+
+.quarter-size-image {
+    width: 25%; 
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

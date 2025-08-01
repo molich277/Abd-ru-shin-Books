@@ -1,0 +1,129 @@
+{# books/templates/books/grail_message.html #}
+{% extends 'base.html' %}
+{% load static %} {# <-- ENSURE THIS IS AT THE TOP OF THE FILE IF NOT ALREADY #}
+
+{% block title %}The Grail Message - Writings of Abd-ru-shin - Alexander Bernhardt Publishing Co Kenya{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 text-primary article-heading">WRITINGS OF<br>ABD-RU-SHIN</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="row g-4 mb-5"> {# Start of grid for books #}
+
+                {# Book 1: In the Light of Truth - The Grail Message #}
+<div class="col-12">
+    <div class="card shadow-sm h-100 p-3 d-flex flex-md-row align-items-center">
+        {# ... other content ... #}
+        <div class="flex-grow-1 text-center text-md-start">
+            {# ... other content ... #}
+            <p class="card-text">
+                <a href="{% url 'books:in_the_light_of_truth_detail' %}" class="btn btn-sm btn-outline-primary mt-2">Read more</a> {# <-- THIS IS THE LINE TO CHECK #}
+                {# ... rest of the section ... #}
+            </p>
+        </div>
+    </div>
+</div>
+
+                {# Book 2: The Ten Commandments of God and The Lord's Prayer #}
+                <div class="col-12">
+                    <div class="card shadow-sm h-100 p-3 d-flex flex-md-row align-items-center">
+                        <div class="flex-shrink-0 me-md-4 mb-3 mb-md-0">
+                            <a href="{% static 'images/10_commandments_largei.jpg' %}" data-lightbox="writings-gallery">
+                                <img src="{% static 'images/flat-ten-comm.jpg' %}" class="img-fluid" alt="The Ten Commandments of God Cover" style="max-height: 250px; width: auto;">
+                            </a>
+                        </div>
+                        <div class="flex-grow-1 text-center text-md-start">
+                            <h4 class="card-title text-secondary"><strong>The Ten Commandments of God</strong></h4>
+                            <h5 class="card-subtitle mb-2 text-muted"><strong>and The Lord's Prayer</strong></h5>
+                            <p class="card-text">explained to mankind by Abd-ru-shin</p>
+                            <p class="card-text">
+                                <a href="#" class="btn btn-sm btn-outline-primary mt-2">Read more</a> {# Placeholder for internal link #}
+                                <br>
+                                <a href="{% static 'images/10_commandments_largei.jpg' %}" data-lightbox="writings-gallery" class="btn btn-sm btn-link mt-2 p-0 text-decoration-none">
+                                    <img src="{% static 'images/click_to_enlarge.png' %}" alt="Click to enlarge image" height="33" width="126" class="img-fluid">
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Book 3: Prayers #}
+                <div class="col-12">
+                    <div class="card shadow-sm h-100 p-3 d-flex flex-md-row align-items-center">
+                        <div class="flex-shrink-0 me-md-4 mb-3 mb-md-0">
+                            <a href="{% static 'images/prayers_large.jpg' %}" data-lightbox="writings-gallery">
+                                <img src="{% static 'images/prayers.jpg' %}" class="img-fluid" alt="Prayers Cover" style="max-height: 250px; width: auto;">
+                            </a>
+                        </div>
+                        <div class="flex-grow-1 text-center text-md-start">
+                            <p class="mb-1">Abd-ru-shin</p>
+                            <h4 class="card-title text-secondary">Prayers</h4>
+                            <p class="card-text">
+                                <a href="#" class="btn btn-sm btn-outline-primary mt-2">Read more</a> {# Placeholder for internal link #}
+                                <br>
+                                <a href="{% static 'images/prayers_large.jpg' %}" data-lightbox="writings-gallery" class="btn btn-sm btn-link mt-2 p-0 text-decoration-none">
+                                    <img src="{% static 'images/click_to_enlarge.png' %}" alt="Click to enlarge image" height="33" width="126" class="img-fluid">
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Book 4: Questions and Answers #}
+                <div class="col-12">
+                    <div class="card shadow-sm h-100 p-3 d-flex flex-md-row align-items-center">
+                        <div class="flex-shrink-0 me-md-4 mb-3 mb-md-0">
+                            <a href="{% static 'images/Q_and_A_largei.jpg' %}" data-lightbox="writings-gallery">
+                                <img src="{% static 'images/flat-q_and_a.jpg' %}" class="img-fluid" alt="Questions and Answers Cover" style="max-height: 250px; width: auto;">
+                            </a>
+                        </div>
+                        <div class="flex-grow-1 text-center text-md-start">
+                            <p class="mb-1">Abd-ru-shin</p>
+                            <h4 class="card-title text-secondary">Questions and Answers</h4>
+                            <h5 class="card-subtitle mb-2 text-muted"><strong>1924 - 1937</strong></h5>
+                            <p class="card-text">
+                                <a href="#" class="btn btn-sm btn-outline-primary mt-2">Read more</a> {# Placeholder for internal link #}
+                                <br>
+                                <a href="{% static 'images/Q_and_A_largei.jpg' %}" data-lightbox="writings-gallery" class="btn btn-sm btn-link mt-2 p-0 text-decoration-none">
+                                    <img src="{% static 'images/click_to_enlarge.png' %}" alt="Click to enlarge image" height="33" width="126" class="img-fluid">
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Book 5: Selected Lectures from the Grail Message #}
+                <div class="col-12">
+                    <div class="card shadow-sm h-100 p-3 d-flex flex-md-row align-items-center">
+                        <div class="flex-shrink-0 me-md-4 mb-3 mb-md-0">
+                            <a href="{% static 'images/Selected%20Lectures.jpg' %}" data-lightbox="writings-gallery">
+                                <img src="{% static 'images/flat-selected-lecs.jpg' %}" class="img-fluid" alt="Selected Lectures Cover" style="max-height: 250px; width: auto;">
+                            </a>
+                        </div>
+                        <div class="flex-grow-1 text-center text-md-start">
+                            <p class="mb-1">Abd-ru-shin</p>
+                            <h4 class="card-title text-secondary">In the Light of Truth</h4>
+                            <h5 class="card-subtitle mb-2 text-muted">Selected lectures from the Grail Message</h5>
+                            <p class="card-text">
+                                <a href="#" class="btn btn-sm btn-outline-primary mt-2">Read more</a> {# Placeholder for internal link #}
+                                <a href="{% static 'pdf/Abd-ru-shin_Selected_lectures.pdf' %}" class="btn btn-sm btn-outline-success ms-2 mt-2" target="_blank">Download (free)</a>
+                                <br>
+                                <a href="{% static 'images/Selected%20Lectures.jpg' %}" data-lightbox="writings-gallery" class="btn btn-sm btn-link mt-2 p-0 text-decoration-none">
+                                    <img src="{% static 'images/click_to_enlarge.png' %}" alt="Click to enlarge image" height="33" width="126" class="img-fluid">
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> {# End of grid for books #}
+
+            <p class="text-center mt-5"><a href="#Top" class="btn btn-info btn-sm">Back to Top</a></p>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

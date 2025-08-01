@@ -1,0 +1,5 @@
+<ul>
+            {% for chapter in free_chapters %}
+                <li><a href="{% url 'books:read_free_pdf' chapter.id %}" target="_blank">Book 1 - Chapter {{ chapter.chapter_number }} (Read Only)</a></li>
+            {% endfor %}
+        </ul>

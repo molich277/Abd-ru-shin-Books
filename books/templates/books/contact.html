@@ -1,0 +1,97 @@
+{# books/templates/books/contact.html #}
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - Alexander Bernhardt Publishing Co Kenya{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 text-primary">Contact Us</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <p class="lead text-center mb-4">
+                We welcome your inquiries and feedback. Please feel free to reach out to us using the information below:
+            </p>
+
+            <div class="card p-4 shadow-sm mb-4">
+                <h5 class="card-title text-center text-secondary">Our Contact Details</h5>
+                <ul class="list-unstyled text-center">
+                    <li><strong>Email:</strong> info@alexanderbernhardt.co.ke</li>
+                    <li><strong>Phone:</strong> +254 7XX XXX XXX</li> {# Replace with your actual phone number #}
+                    <li><strong>Address:</strong> P.O. Box XXXX, Nairobi, Kenya</li> {# Replace with your actual address #}
+                </ul>
+            </div>
+
+            <div class="card p-4 shadow-sm">
+                <h5 class="card-title text-center text-secondary">Send Us a Message</h5>
+                <p class="text-center">
+                    For specific questions or larger inquiries, you can use the form below, or send us an email directly.
+                </p>
+                {# In the future, you would add a Django contact form here #}
+                <form method="post" action="{% url 'books:contact' %}">
+    {% csrf_token %} {# <-- ADD THIS LINE FIRST #}
+
+    {% if success_message %}
+        <div class="alert alert-success text-center" role="alert">
+            {{ success_message }}
+        </div>
+    {% endif %}
+
+    {# Display form errors if any #}
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            Please correct the errors below:
+            <ul>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li>{{ field.label }}: {{ field.errors }}</li>
+                    {% endif %}
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    <li>{{ form.non_field_errors }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+        {{ form.name }}
+        {# Add Bootstrap class manually #}
+        <script>
+            document.getElementById('{{ form.name.id_for_label }}').classList.add('form-control');
+        </script>
+        {% if form.name.errors %}
+            <div class="invalid-feedback d-block">{{ form.name.errors }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+        {{ form.email }}
+        {# Add Bootstrap class manually #}
+        <script>
+            document.getElementById('{{ form.email.id_for_label }}').classList.add('form-control');
+        </script>
+        {% if form.email.errors %}
+            <div class="invalid-feedback d-block">{{ form.email.errors }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.message.id_for_label }}" class="form-label">{{ form.message.label }}</label>
+        {{ form.message }}
+        {# Add Bootstrap class manually #}
+        <script>
+            document.getElementById('{{ form.message.id_for_label }}').classList.add('form-control');
+        </script>
+        {% if form.message.errors %}
+            <div class="invalid-feedback d-block">{{ form.message.errors }}</div>
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary d-block w-100">Send Message</button>
+</form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {# <--- ENSURE THIS IS PRESENT AT THE END OF THE FILE #}
+       

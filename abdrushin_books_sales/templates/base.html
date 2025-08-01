@@ -1,25 +1,56 @@
+{# abdrushin_books_sales/templates/base.html #}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% load cms_tags menu_tags sekizai_tags %} {# ADD THESE CMS-SPECIFIC TAGS #}
+<title>{% block title %}{% page_attribute "page_title" as title_var %}{% if title_var %}{{ title_var }}{% else %}Abd-ru-shin Book Sales{% endif %}{% endblock %}</title> {# Updated title #}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Abdrushin Book Sales{% endblock %}</title>
+    <title>{% block title %}Abd-ru-shin Books - Bootstrap Edition{% endblock %}</title>
+
+    {# Bootstrap CSS #}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    {# Favicons and App Icons (Generated) #}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'favicons/site.webmanifest' %}">
+    <link rel="shortcut icon" href="{% static 'favicons/favicon.ico' %}">
+    
+    {# Your custom CSS files (like cookie_banner.css) #}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    {# Add other custom CSS files you might have here #}
+	<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+
+    {% render_block "css" %} {# CRITICAL for CMS - adds CMS CSS #}
     {% block extra_head %}{% endblock %}
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    </head>
+    <body>
+    {# Top Navigation Bar (Bootstrap Navbar) #}
+    {% cms_toolbar %} {# CRITICAL for CMS - enables frontend editing #}
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'books:home' %}">Abd-ru-shin Books</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                {# Use CMS menu for navigation #}
+...
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% show_menu 0 100 100 100 %} {# Renders CMS pages in menu #}
+                    {# If you want to keep your app's hardcoded links: #}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'books:home' %}">Home</a>
+                        <a class="nav-link" href="{% url 'books:audio' %}">Audio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'books:all_books' %}">All Books</a>
@@ -27,17 +58,55 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'books:audio_page' %}">Audio</a>
                     </li>
+
+                    {# Dropdown for Writings & Teachings #}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="writingsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Writings & Teachings
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="writingsDropdown">
+                            <li><a class="dropdown-item" href="#">Writings of Abd-ru-shin (Grail Message)</a></li> {# Placeholder link #}
+                            <li><a class="dropdown-item" href="#">About Abd-ru-shin (The Author)</a></li> {# Placeholder link #}
+                            <li><a class="dropdown-item" href="#">Thoughts on the Grail Message</a></li> {# Placeholder link #}
+                            <li><a class="dropdown-item" href="#">Other Writings</a></li> {# Placeholder link #}
+                        </ul>
+                    </li>
+
+                    {# Dropdown for Information & Contact #}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Information
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="infoDropdown">
+                            <a class="nav-link" href="{% url 'books:contact' %}">Contact</a>
+                            <li><a class="dropdown-item" href="#">Imprint</a></li> {# Placeholder link #}
+                            <li><a class="dropdown-item" href="{% static 'pdf/E1.0.0-Home.pdf' %}" target="_blank">Print Version (PDF)</a></li> {# From old right column #}
+                        </ul>
+                    </li>
+
+                    {# ONLY show Recently Viewed if user is a superuser #}
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'books:recently_viewed_books' %}">Recently Viewed</a>
+                    </li>
+                    {% endif %}
+                </ul>
+...         
+                  {# User Authentication Links (pushed to the right) #}
+                  <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'books:cart' %}">Cart</a>
                     </li>
-                </ul>
-                <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'books:profile' %}">Profile ({{ user.username }})</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Profile ({{ user.username }})
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" href="{% url 'books:profile' %}">My Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+                            </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
@@ -52,19 +121,75 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    {# Main Content Area (simplified as no side columns are here) #}
+    <main class="container mt-4">
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="alert alert-info" role="alert">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
         {% endif %}
+        </div>
 
-        {% block content %}{% endblock %}
+    <main role="main">
+        {% block content %}
+        {# Content from child templates will go here, or CMS placeholders #}
+        {% endblock content %}
+    </main>
+
+        {# Footer #}
+    {# /home/yuri/Websites/Abd-ru-shin-Books/books/templates/base.html #}
+
+{# ... (your existing HTML, head, body, navigation, etc.) ... #}
+
+<footer class="bg-light text-center text-lg-start mt-5 py-3"> {# Example Bootstrap styling #}
+    <div class="container p-4">
+        <div class="text-center">
+            © {% now "Y" %} Alexander Bernhardt Publishing Co. All rights reserved.
+            <br>
+            <a href="{% url 'books:privacy_policy' %}" class="text-dark me-3">Privacy Policy</a>
+            <span class="text-muted">|</span>
+            <a href="{% url 'books:terms_of_use' %}" class="text-dark ms-3">Terms of Use</a>
+        </div>
+    </div>
+</footer>
+
+{# ... (your closing body and html tags) ... #}           
+
+
+    {# Cookie Consent Banner #}
+    <div id="cookie-banner" class="fixed-bottom bg-info text-white p-3 text-center">
+        <p class="mb-2">This website uses cookies to enhance your user experience and analyze site traffic. By continuing to use this site, you agree to our use of cookies.</p>
+        <button id="accept-cookies" class="btn btn-primary">Accept Cookies</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eG7n6LhF7sL2A" crossorigin="anonymous"></script>
+    {# Bootstrap JS Bundle (Popper.js and Bootstrap JS) - crucial for dropdowns #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+	{# jQuery (Lightbox often needs it, make sure it's loaded before Lightbox) #}
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+
+    {# Lightbox JS #}
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+
+    {# Your custom JavaScript files #}
+    <script src="{% static 'js/cookie_banner.js' %}"></script>
+	
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>' %}"></script> {# If you use this one #}
+    <script src="{% static 'js/calculate.js' %}"></script>
+
+    {# Any other inline scripts #}
+    <script type="text/javascript">
+        // Shadowbox.init({ handleOversize: "drag", modal: true }); // If you still want Shadowbox, ensure its actual library is in shadowbox.js
+        // Note: Lightbox is usually preferred over Shadowbox for image galleries.
+    </script>
+
+     {% render_block "js" %} {# CRITICAL for CMS - adds CMS JS #}
+
+    {% block extra_js %}
     {% block extra_js %}{% endblock %}
 </body>
 </html>
